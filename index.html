@@ -37,8 +37,8 @@ input:focus{border-color:#7f93ff}
 .ac{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:1em}.ac button{border-radius:14px;padding:.6em .2em;font-size:12px;line-height:1.5}.ac button[data-a=del]{color:#f0a0b0}
 #lk{position:fixed;top:calc(var(--st) + 56px);left:10px;z-index:6;display:none;align-items:center;gap:8px;background:rgba(20,30,80,.95);border:1px solid #7f93ff;border-radius:999px;padding:.3em .4em .3em 1em;font-size:14px}#lk.on{display:flex}#lk button{padding:.2em .8em}
 #ti,#fin{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:0 24px calc(var(--sa) + 56px);transition:opacity 1s}
-#ti{background:linear-gradient(transparent 55%,rgba(6,12,40,.85)),url(title.jpg) center/cover #060c28;gap:14px}
-#ti .tir{display:flex;gap:10px}#ti .tir button{font-size:13px;padding:.55em 1em;background:rgba(6,12,40,.55)}
+#ti{background:linear-gradient(transparent 42%,rgba(6,12,40,.55) 60%,rgba(6,12,40,.92) 78%),url(title.jpg) center/cover #060c28;justify-content:flex-start;padding-top:calc(var(--st) + 44vh)}
+#ti .tir{display:flex;gap:10px;margin-top:14px}#ti .tir button{font-size:13px;padding:.55em 1em;background:rgba(6,12,40,.55)}
 #go{font-size:17px;padding:.7em 2em;background:rgba(6,12,40,.55)}
 #fin{background:rgba(6,12,40,.92);justify-content:center;text-align:center;opacity:0;pointer-events:none;letter-spacing:.15em;gap:.5em}
 #fin.on{opacity:1;pointer-events:auto}#fin small{color:var(--dim);letter-spacing:.3em}#fin h2{font-weight:400;font-size:22px;margin:.2em}
@@ -112,9 +112,9 @@ for(let k=0;k<6;k++)ring(A,RA,RA,0,new T.Matrix4().makeRotationY(k*Math.PI/6).mu
 [-60,-30,0,30,60].forEach(d=>{const r=d*Math.PI/180;ring(A,RA*Math.cos(r),RA*Math.cos(r),RA*Math.sin(r),I)});
 ring(B,RA,RA,0,new T.Matrix4().makeRotationZ(.41),1);
 [[4.8,3.8,.3,.5],[7.6,6.5,-.5,.2],[9.9,7.9,.9,-.6]].forEach(([a,b,x,z])=>ring(B,a,b,0,new T.Matrix4().makeRotationFromEuler(new T.Euler(x,0,z)),1));
-const el=Math.min(1,(Date.now()-t0)/6000),fL=.34-.26*el,fD=.4-.32*el;
-raw(A,0x6f80c8,fL*.32);raw(B,0xb8c4ff,fL*.5);
-const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(dots,3));G.add(new T.Points(g,new T.PointsMaterial({size:2.6,sizeAttenuation:false,color:0x8fa0d8,transparent:true,opacity:fD*.55,blending:T.AdditiveBlending,depthWrite:false})))}
+const el=Math.min(1,(Date.now()-t0)/6000),fL=.5-.32*el,fD=.55-.36*el;
+raw(A,0x6f80c8,fL*.55);raw(B,0xb8c4ff,fL*.85);
+const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(dots,3));G.add(new T.Points(g,new T.PointsMaterial({size:2.6,sizeAttenuation:false,color:0x8fa0d8,transparent:true,opacity:fD*.8,blending:T.AdditiveBlending,depthWrite:false})))}
 function pastMarkers(){const others=D.skies.filter(s=>s.id!==D.cur&&s.stars.length);pastList=others;pastPos.clear();
 const P=[];others.forEach((s,i)=>{const t=i*2.399963,y=((i*.618)%1)*2-1,r=Math.sqrt(1-y*y);const v=new T.Vector3(Math.cos(t)*r,y,Math.sin(t)*r).multiplyScalar(40);pastPos.set(s.id,v);P.push(v.x,v.y,v.z)});
 if(pastPts){S.remove(pastPts);pastPts.geometry.dispose();pastPts.material.dispose()}
