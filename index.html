@@ -19,57 +19,73 @@ input{width:100%;font-size:16px;background:transparent;border:1px solid var(--li
 input:focus{border-color:#7f93ff}
 #top{position:fixed;top:calc(var(--st) + 10px);right:10px;display:flex;gap:6px;z-index:5}
 #top button{font-size:13px;padding:.4em .9em}
-#bar{position:fixed;left:0;right:0;bottom:0;padding:10px 12px calc(var(--sa) + 12px);display:flex;justify-content:space-between;align-items:center;z-index:5}
-#tg{display:flex;gap:8px}
-#tg button{width:40px;height:40px;padding:0;font-size:18px;opacity:.85}
-#tg button.off{opacity:.25}
-#add{font-size:26px;width:48px;height:48px;padding:0;line-height:1;background:rgba(127,147,255,.18)}
-#sh{position:fixed;left:0;right:0;bottom:0;max-height:62vh;overflow:auto;z-index:20;background:rgba(8,14,44,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);border-radius:18px 18px 0 0;padding:18px 18px calc(var(--sa) + 18px);transform:translateY(105%);transition:transform .35s ease;line-height:1.7}
+#sn{position:fixed;top:calc(var(--st) + 10px);left:10px;z-index:5}
+#sn button{font-size:13px;padding:.4em .8em;text-align:left;line-height:1.5;background:rgba(8,14,44,.55)}
+#sn small{display:block;font-size:10.5px;color:var(--dim);letter-spacing:.03em}
+#bar{position:fixed;left:0;right:0;bottom:0;padding:10px 12px calc(var(--sa) + 12px);display:flex;flex-direction:column;align-items:stretch;gap:10px;z-index:5}
+#tg{display:flex;overflow-x:auto;gap:6px}
+#tg button{width:auto;height:auto;padding:.45em .85em;font-size:14px;white-space:nowrap;background:rgba(8,14,44,.7);opacity:.85}
+#tg button.off{opacity:.3}
+#add{align-self:flex-end;font-size:15px;padding:.7em 1.3em;border-color:#7f93ff;background:rgba(127,147,255,.25);line-height:1}
+#sh{position:fixed;left:0;right:0;bottom:0;max-height:66vh;overflow:auto;z-index:35;background:rgba(8,14,44,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);border-radius:18px 18px 0 0;padding:18px 18px calc(var(--sa) + 18px);transform:translateY(105%);transition:transform .35s ease;line-height:1.7}
 #sh.open{transform:none}
 .big{font-size:20px;letter-spacing:.1em}.w{font-size:18px;margin:.3em 0 .5em;line-height:1.6}.m{font-size:13px;color:var(--dim);margin:.9em 0 .3em}
 .r{display:flex;flex-wrap:wrap;gap:8px;margin:.5em 0}.c{font-size:14px}
 .dots{display:flex;gap:14px;margin:.8em 0;align-items:center;font-size:13px;color:var(--dim)}
 .dots i{width:18px;height:18px;border-radius:50%;border:1px solid #7f93ff;display:block}.dots i.on{background:#7f93ff}
+.p{background:#7f93ff!important;color:#060c28;border-color:#7f93ff}.x{position:absolute;top:10px;right:12px;border:0;background:none;font-size:18px;padding:.3em .6em}
+.ac{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:1em}.ac button{border-radius:14px;padding:.6em .2em;font-size:12px;line-height:1.5}.ac button[data-a=del]{color:#f0a0b0}
+#lk{position:fixed;top:calc(var(--st) + 56px);left:10px;z-index:6;display:none;align-items:center;gap:8px;background:rgba(20,30,80,.95);border:1px solid #7f93ff;border-radius:999px;padding:.3em .4em .3em 1em;font-size:14px}#lk.on{display:flex}#lk button{padding:.2em .8em}
 #ti,#fin{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:0 24px calc(var(--sa) + 56px);transition:opacity 1s}
-#ti{background:linear-gradient(transparent 55%,rgba(6,12,40,.85)),url(title.jpg) center/cover #060c28}
-#fin{background:rgba(6,12,40,.88);justify-content:center;text-align:center;opacity:0;pointer-events:none;letter-spacing:.2em;gap:.6em}
+#ti{background:linear-gradient(transparent 55%,rgba(6,12,40,.85)),url(title.jpg) center/cover #060c28;gap:14px}
+#ti .tir{display:flex;gap:10px}#ti .tir button{font-size:13px;padding:.55em 1em;background:rgba(6,12,40,.55)}
+#go{font-size:17px;padding:.7em 2em;background:rgba(6,12,40,.55)}
+#fin{background:rgba(6,12,40,.92);justify-content:center;text-align:center;opacity:0;pointer-events:none;letter-spacing:.15em;gap:.5em}
 #fin.on{opacity:1;pointer-events:auto}#fin small{color:var(--dim);letter-spacing:.3em}#fin h2{font-weight:400;font-size:22px;margin:.2em}
+#fin p{letter-spacing:.05em;line-height:1.7}
 #ti.h{opacity:0;pointer-events:none}
 #tt{position:fixed;left:50%;bottom:calc(var(--sa) + 90px);transform:translateX(-50%);z-index:40;background:rgba(20,30,80,.95);border:1px solid var(--line);border-radius:999px;padding:.5em 1.2em;font-size:14px;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
 #tt.on{opacity:1;pointer-events:auto}
-@media(prefers-reduced-motion:reduce){#sh,#ti,#fin{transition:none}}
 #tw{position:fixed;inset:0;pointer-events:none}#tw i{position:absolute;border-radius:50%;background:#cfd8ff;opacity:.08;animation:tw ease-in-out infinite}
-@keyframes tw{0%,100%{opacity:.06}50%{opacity:.5}}@media(prefers-reduced-motion:reduce){#tw i{animation:none}}
-#bar{flex-direction:column;align-items:stretch;gap:10px}#add{align-self:flex-end;width:auto;height:auto;font-size:15px;padding:.7em 1.3em;border-color:#7f93ff;background:rgba(127,147,255,.25)}
-#tg{overflow-x:auto;gap:6px}#tg button{width:auto;height:auto;padding:.45em .85em;font-size:14px;white-space:nowrap;background:rgba(8,14,44,.7)}
-.p{background:#7f93ff!important;color:#060c28;border-color:#7f93ff}.x{position:absolute;top:10px;right:12px;border:0;background:none;font-size:18px;padding:.3em .6em}
-.ac{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:1em}.ac button{border-radius:14px;padding:.6em .2em;font-size:12px;line-height:1.5}.ac button[data-a=del]{color:#f0a0b0}
-#lk{position:fixed;top:calc(var(--st) + 10px);left:10px;z-index:6;display:none;align-items:center;gap:8px;background:rgba(20,30,80,.95);border:1px solid #7f93ff;border-radius:999px;padding:.3em .4em .3em 1em;font-size:14px}#lk.on{display:flex}#lk button{padding:.2em .8em}
+@keyframes tw{0%,100%{opacity:.06}50%{opacity:.5}}
+@media(prefers-reduced-motion:reduce){#sh,#ti,#fin,#tw i{transition:none;animation:none}}
 </style></head><body>
 <div id="tw"></div><canvas id="cv"></canvas><div id="lk">つなぐ星をタップ<button id="lc">やめる</button></div>
-<div id="top"><button id="bc">✦ 星座</button><button id="bf">◎ 観測完了</button><button id="bm" aria-label="設定">⚙</button></div>
+<div id="sn"></div>
+<div id="top"><button id="bc">✦ 星座</button><button id="bf">◎ 観測を終える</button><button id="bm" aria-label="設定">⚙</button></div>
 <div id="bar"><button id="add">＋ 星を追加</button><div id="tg"></div></div>
 <div id="sh"></div><div id="tt"></div>
-<div id="fin"><small>OBSERVATION COMPLETE</small><h2>観測完了。</h2><p>これが、いまのアナタの星空です。</p></div>
-<div id="ti"><button id="go" style="font-size:17px;padding:.7em 2em;background:rgba(6,12,40,.55)">観測をはじめる</button></div>
+<div id="fin"></div>
+<div id="ti"><button id="go">🔭 星空を見る</button><div class="tir"><button id="how">🌐 使い方</button><button id="contact">📡 交信</button></div></div>
 <script type="module">
 import * as T from './three.module.min.js';
-const $=s=>document.querySelector(s),K='pp1';
+const $=s=>document.querySelector(s),K='pp1',TW='https://x.com/teabreak_inv';
 const AX=[{e:'⭐',n:'好き',c:0xf5c96a,q:'好きなこと'},{e:'👾',n:'嫌い',c:0xb28dff,q:'嫌いなこと'},{e:'🪐',n:'得意',c:0x6fb4ff,q:'得意なこと'},{e:'🧬',n:'苦手',c:0x6fe0b0,q:'苦手なこと'}];
 const DIR=[[1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]].map(v=>new T.Vector3(...v).normalize());
 const PRE=['食事','仕事','家事','家族','趣味','休日','買い物','運動','学習','休息','SNS','創作','ゲーム','旅行'];
 const hex=c=>'#'+c.toString(16).padStart(6,'0');
-let D;try{D=JSON.parse(localStorage[K])}catch{D={v:1,acts:[],stars:[],links:[],cons:[]}}
-const save=()=>{try{localStorage[K]=JSON.stringify(D)}catch{}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
 const hash=s=>{let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
 const rnd=(id,i)=>(hash(id+i)%2000)/1000-1;
-const cur=()=>D.stars.find(s=>s.id===sel);
+const fmt=t=>{const d=new Date(t);return `${d.getMonth()+1}/${d.getDate()}`};
+function blankSky(){return{id:uid(),name:'',named:false,start:null,end:null,closed:false,acts:[],stars:[],links:[],cons:[]}}
+function migrate(raw){
+  if(raw&&Array.isArray(raw.skies)&&raw.cur)return raw;
+  const sky=blankSky();
+  if(raw&&Array.isArray(raw.stars)){sky.acts=raw.acts||[];sky.stars=raw.stars||[];sky.links=raw.links||[];sky.cons=raw.cons||[];
+    if(sky.stars.length){sky.start=sky.stars[0].createdAt||Date.now();sky.end=sky.stars[sky.stars.length-1].createdAt||Date.now()}}
+  return{v:2,skies:[sky],cur:sky.id}}
+let D;try{D=migrate(JSON.parse(localStorage[K]))}catch{D=migrate(null)}
+const SK=()=>D.skies.find(x=>x.id===D.cur)||D.skies[0];
+function save(){const s=SK();if(s){s.end=Date.now();if(!s.start&&s.stars.length)s.start=s.stars[0].createdAt||s.end}try{localStorage[K]=JSON.stringify(D)}catch{}}
+const cur=()=>SK().stars.find(s=>s.id===sel);
 /* three */
-const cv=$('#cv'),R=new T.WebGLRenderer({canvas:cv,alpha:true}),S=new T.Scene(),cam=new T.PerspectiveCamera(55,1,.1,200),G=new T.Group();
+const cv=$('#cv'),R=new T.WebGLRenderer({canvas:cv,alpha:true}),S=new T.Scene(),cam=new T.PerspectiveCamera(55,1,.1,300),G=new T.Group();
 R.setPixelRatio(Math.min(devicePixelRatio,2));S.add(G);
-let dirty=1,zoom=22,sel=null,linkFrom=null,lv=2,flow=null,undo=null,rx=.3,ry=0,px=0,py=0,idle=Date.now();const pos=new Map(),vis=[1,1,1,1],ptr=new Map();let down=null;
+const t0=Date.now();
+let dirty=1,zoom=26,sel=null,linkFrom=null,lv=2,flow=null,undo=null,rx=.3,ry=0,px=0,py=0,idle=Date.now();
+const pos=new Map(),pastPos=new Map(),vis=[1,1,1,1],ptr=new Map();let down=null,pastList=[],pastMat=null,pastPts=null;
 function resize(){R.setSize(innerWidth,innerHeight);cam.fov=innerWidth<innerHeight?75:55;cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();dirty=1}
 addEventListener('resize',resize);resize();
 {const t=$('#tw');for(let i=0;i<70;i++){const e=document.createElement('i'),z=1+Math.random()*1.8;e.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${z}px;height:${z}px;animation-duration:${3+Math.random()*5}s;animation-delay:${-Math.random()*8}s`;t.append(e)}}
@@ -78,47 +94,57 @@ vertexShader:'attribute float sz;attribute vec3 cl;attribute vec3 fx;varying vec
 fragmentShader:'varying vec3 v;varying vec3 f;void main(){vec2 p=(gl_PointCoord-.5)*2.;float r=length(p),a;if(f.x>.5){float c=cos(f.y),s=sin(f.y);vec2 q=vec2(c*p.x+s*p.y,(-s*p.x+c*p.y)*3.);float e=length(q);a=smoothstep(.34,.28,r)*.95+pow(max(1.-r/.6,0.),2.)*f.z*.5+smoothstep(.07,0.,abs(e-.8))*.8;}else a=(pow(max(1.-r,0.),2.5)+.6*smoothstep(.22,0.,r))*f.z;if(a<.005)discard;gl_FragColor=vec4(v*a,a);}'});
 /* layout */
 function layout(){pos.clear();const ai={};
-D.acts.forEach((a,i)=>{if(!i){ai[a.id]=new T.Vector3();return}const y=((i*.618)%1)*2-1,t=i*2.39996,r=Math.sqrt(1-y*y);ai[a.id]=new T.Vector3(Math.cos(t)*r,y,Math.sin(t)*r).multiplyScalar(5.5)});
-D.stars.forEach(s=>{const d=new T.Vector3(rnd(s.id,1),rnd(s.id,2),rnd(s.id,3)).normalize().multiplyScalar(2+3*Math.abs(rnd(s.id,4)));
-const p=(ai[s.act]||new T.Vector3()).clone().add(d).addScaledVector(DIR[s.ax],.8).multiply(new T.Vector3(1,1.2,1)),l=p.length();if(l>6)p.setLength(6+1.6*(1-Math.exp(-(l-6)/3)));pos.set(s.id,p)})}
+SK().acts.forEach((a,i)=>{if(!i){ai[a.id]=new T.Vector3();return}const y=((i*.618)%1)*2-1,t=i*2.39996,r=Math.sqrt(1-y*y);ai[a.id]=new T.Vector3(Math.cos(t)*r,y,Math.sin(t)*r).multiplyScalar(7.2)});
+SK().stars.forEach(s=>{const d=new T.Vector3(rnd(s.id,1),rnd(s.id,2),rnd(s.id,3)).normalize().multiplyScalar(2.6+3.6*Math.abs(rnd(s.id,4)));
+const p=(ai[s.act]||new T.Vector3()).clone().add(d).addScaledVector(DIR[s.ax],1.0).multiply(new T.Vector3(1,1.15,1)),l=p.length();if(l>9.5)p.setLength(9.5+2.2*(1-Math.exp(-(l-9.5)/3)));pos.set(s.id,p)})}
 const look=s=>({sf:.55+1.15*Math.abs(rnd(s.id,5)),ring:Math.abs(rnd(s.id,6))<.32?1:0,tilt:rnd(s.id,7)*3.14,glow:.5+1.1*Math.abs(rnd(s.id,8))});
 const bg=t=>{const x=[...t.toLowerCase()],s=new Set();if(x.length===1)s.add(x[0]);for(let i=0;i<x.length-1;i++)s.add(x[i]+x[i+1]);return s};
 const sim=(a,b)=>{let n=0;a.forEach(x=>b.has(x)&&n++);return n/(a.size+b.size-n||1)};
-function cands(){const st=D.stars,B=st.map(s=>bg(s.text)),k=new Set(),L=[];
+function cands(){const st=SK().stars,B=st.map(s=>bg(s.text)),k=new Set(),L=[];
 st.forEach((s,i)=>{const c=[];st.forEach((u,j)=>{if(i===j||s.act===u.act)return;const d=pos.get(s.id).distanceTo(pos.get(u.id)),m=sim(B[i],B[j]);if(m>=.25||d<5)c.push([j,d-m*6])});
 c.sort((a,b)=>a[1]-b[1]).slice(0,2).forEach(([j])=>{const key=[s.id,st[j].id].sort().join();if(!k.has(key)){k.add(key);L.push([s.id,st[j].id])}})});return L}
 function seg(pairs,col,op){const a=[];pairs.forEach(([x,y])=>{const p=pos.get(x),q=pos.get(y);p&&q&&a.push(p.x,p.y,p.z,q.x,q.y,q.z)});
 const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(a,3));G.add(new T.LineSegments(g,new T.LineBasicMaterial({color:col,transparent:true,opacity:op,depthWrite:false,blending:T.AdditiveBlending})))}
 function raw(a,col,op){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(a,3));G.add(new T.LineSegments(g,new T.LineBasicMaterial({color:col,transparent:true,opacity:op,depthWrite:false,blending:T.AdditiveBlending})))}
-function orb(){const R=8.5,A=[],B=[],dots=[],v=new T.Vector3(),I=new T.Matrix4();let c=0;
-const ring=(out,rx,rz,y,m,dot)=>{let p=null;c++;for(let i=0;i<=96;i++){const t=i/96*6.2832;v.set(Math.cos(t)*rx,y,Math.sin(t)*rz).applyMatrix4(m);const q=v.clone();if(p)out.push(p.x,p.y,p.z,q.x,q.y,q.z);if(dot&&i===Math.round(96*((c*.23)%1)))dots.push(q.x,q.y,q.z);p=q}};
-for(let k=0;k<6;k++)ring(A,R,R,0,new T.Matrix4().makeRotationY(k*Math.PI/6).multiply(new T.Matrix4().makeRotationX(Math.PI/2)));
-[-60,-30,0,30,60].forEach(d=>{const r=d*Math.PI/180;ring(A,R*Math.cos(r),R*Math.cos(r),R*Math.sin(r),I)});
-ring(B,R,R,0,new T.Matrix4().makeRotationZ(.41),1);ring(B,R*1.0,R*1.0,0,new T.Matrix4().makeRotationZ(.41).multiply(new T.Matrix4().makeTranslation(0,0,0)),0);
-[[3.4,2.7,.3,.5],[5.4,4.6,-.5,.2],[7,5.6,.9,-.6]].forEach(([a,b,x,z])=>ring(B,a,b,0,new T.Matrix4().makeRotationFromEuler(new T.Euler(x,0,z)),1));
-raw(A,0x6f80c8,.11);raw(B,0xb8c4ff,.2);
-const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(dots,3));G.add(new T.Points(g,new T.PointsMaterial({size:4,sizeAttenuation:false,color:0xffe9a8,transparent:true,opacity:.6,blending:T.AdditiveBlending,depthWrite:false})))}
-function build(){layout();G.clear();orb();const n=D.stars.length,P=new Float32Array(n*3),C=new Float32Array(n*3),Z=new Float32Array(n),F=new Float32Array(n*3);
-D.stars.forEach((s,i)=>{const p=pos.get(s.id),c=new T.Color(AX[s.ax].c),on=vis[s.ax],k=look(s);P.set([p.x,p.y,p.z],i*3);C.set(on?[c.r,c.g,c.b]:[0,0,0],i*3);F.set([k.ring,k.tilt,k.glow],i*3);Z[i]=on?(.5+s.int*.2)*k.sf*(k.ring?1.7:1)*(s.id===sel||s.id===linkFrom?1.6:1):0});
+function orb(){const RA=12,A=[],B=[],dots=[],v=new T.Vector3(),I=new T.Matrix4();let c=0;
+const ring=(out,rx2,rz2,y,m,dot)=>{let p=null;c++;for(let i=0;i<=96;i++){const t=i/96*6.2832;v.set(Math.cos(t)*rx2,y,Math.sin(t)*rz2).applyMatrix4(m);const q=v.clone();if(p)out.push(p.x,p.y,p.z,q.x,q.y,q.z);if(dot&&i===Math.round(96*((c*.23)%1)))dots.push(q.x,q.y,q.z);p=q}};
+for(let k=0;k<6;k++)ring(A,RA,RA,0,new T.Matrix4().makeRotationY(k*Math.PI/6).multiply(new T.Matrix4().makeRotationX(Math.PI/2)));
+[-60,-30,0,30,60].forEach(d=>{const r=d*Math.PI/180;ring(A,RA*Math.cos(r),RA*Math.cos(r),RA*Math.sin(r),I)});
+ring(B,RA,RA,0,new T.Matrix4().makeRotationZ(.41),1);
+[[4.8,3.8,.3,.5],[7.6,6.5,-.5,.2],[9.9,7.9,.9,-.6]].forEach(([a,b,x,z])=>ring(B,a,b,0,new T.Matrix4().makeRotationFromEuler(new T.Euler(x,0,z)),1));
+const el=Math.min(1,(Date.now()-t0)/6000),fL=.34-.26*el,fD=.4-.32*el;
+raw(A,0x6f80c8,fL*.32);raw(B,0xb8c4ff,fL*.5);
+const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(dots,3));G.add(new T.Points(g,new T.PointsMaterial({size:2.6,sizeAttenuation:false,color:0x8fa0d8,transparent:true,opacity:fD*.55,blending:T.AdditiveBlending,depthWrite:false})))}
+function pastMarkers(){const others=D.skies.filter(s=>s.id!==D.cur&&s.stars.length);pastList=others;pastPos.clear();
+const P=[];others.forEach((s,i)=>{const t=i*2.399963,y=((i*.618)%1)*2-1,r=Math.sqrt(1-y*y);const v=new T.Vector3(Math.cos(t)*r,y,Math.sin(t)*r).multiplyScalar(40);pastPos.set(s.id,v);P.push(v.x,v.y,v.z)});
+if(pastPts){S.remove(pastPts);pastPts.geometry.dispose();pastPts.material.dispose()}
+const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(P,3));
+pastMat=new T.PointsMaterial({size:9,sizeAttenuation:false,color:0xbfd0ff,transparent:true,opacity:0,depthWrite:false,blending:T.AdditiveBlending});
+pastPts=new T.Points(g,pastMat);S.add(pastPts)}
+function build(){layout();G.clear();orb();pastMarkers();const n=SK().stars.length,P=new Float32Array(n*3),C=new Float32Array(n*3),Z=new Float32Array(n),F=new Float32Array(n*3);
+SK().stars.forEach((s,i)=>{const p=pos.get(s.id),c=new T.Color(AX[s.ax].c),on=vis[s.ax],k=look(s);P.set([p.x,p.y,p.z],i*3);C.set(on?[c.r,c.g,c.b]:[0,0,0],i*3);F.set([k.ring,k.tilt,k.glow],i*3);Z[i]=on?(.5+s.int*.2)*k.sf*(k.ring?1.7:1)*(s.id===sel||s.id===linkFrom?1.6:1):0});
 const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(P,3));g.setAttribute('cl',new T.BufferAttribute(C,3));g.setAttribute('sz',new T.BufferAttribute(Z,1));g.setAttribute('fx',new T.BufferAttribute(F,3));G.add(new T.Points(g,M));
-const by=new Map(D.stars.map(s=>[s.id,s])),ok=([x,y])=>by.has(x)&&by.has(y)&&vis[by.get(x).ax]&&vis[by.get(y).ax],same=[];
-D.acts.forEach(a=>{const l=D.stars.filter(s=>s.act===a.id&&vis[s.ax]).sort((x,y)=>x.ax-y.ax);l.slice(1).forEach((s,i)=>same.push([l[i].id,s.id]))});
-seg(same,0x6f80c8,.25);seg(cands().filter(ok),0x9fb0ff,.1);seg(D.links.map(l=>[l.a,l.b]).filter(ok),0xffe9a8,.8);dirty=1}
+const by=new Map(SK().stars.map(s=>[s.id,s])),ok=([x,y])=>by.has(x)&&by.has(y)&&vis[by.get(x).ax]&&vis[by.get(y).ax],same=[];
+SK().acts.forEach(a=>{const l=SK().stars.filter(s=>s.act===a.id&&vis[s.ax]).sort((x,y)=>x.ax-y.ax);l.slice(1).forEach((s,i)=>same.push([l[i].id,s.id]))});
+seg(same,0x6f80c8,.25);seg(cands().filter(ok),0x9fb0ff,.1);seg(SK().links.map(l=>[l.a,l.b]).filter(ok),0xffe9a8,.8);dirty=1;skyLabel()}
 /* input */
 const touch=()=>{idle=Date.now();dirty=1};
 cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,[e.clientX,e.clientY]);down=ptr.size===1?{x:e.clientX,y:e.clientY,t:Date.now(),m:0}:null;touch()});
 cv.addEventListener('pointermove',e=>{const p=ptr.get(e.pointerId);if(!p)return;const dx=e.clientX-p[0],dy=e.clientY-p[1];
-if(ptr.size===2){const o=[...ptr].find(([k])=>k!==e.pointerId)[1];zoom=Math.min(45,Math.max(8,zoom*Math.hypot(p[0]-o[0],p[1]-o[1])/Math.hypot(e.clientX-o[0],e.clientY-o[1])));const k=2*Math.tan(cam.fov*Math.PI/360)*zoom/innerHeight/2;px=Math.max(-20,Math.min(20,px-dx*k));py=Math.max(-20,Math.min(20,py+dy*k))}
+if(ptr.size===2){const o=[...ptr].find(([k])=>k!==e.pointerId)[1];zoom=Math.min(55,Math.max(10,zoom*Math.hypot(p[0]-o[0],p[1]-o[1])/Math.hypot(e.clientX-o[0],e.clientY-o[1])));const k=2*Math.tan(cam.fov*Math.PI/360)*zoom/innerHeight/2;px=Math.max(-24,Math.min(24,px-dx*k));py=Math.max(-24,Math.min(24,py+dy*k))}
 else{ry+=dx*.006;rx=Math.max(-1.4,Math.min(1.4,rx+dy*.006));if(down)down.m+=Math.abs(dx)+Math.abs(dy)}
 ptr.set(e.pointerId,[e.clientX,e.clientY]);touch()});
 cv.addEventListener('pointerup',e=>{ptr.delete(e.pointerId);if(down&&down.m<8&&Date.now()-down.t<500)tap(down.x,down.y);down=null});
 cv.addEventListener('pointercancel',e=>{ptr.delete(e.pointerId);down=null});
-cv.addEventListener('wheel',e=>{zoom=Math.min(45,Math.max(8,zoom*(1+e.deltaY*.001)));touch()},{passive:true});
+cv.addEventListener('wheel',e=>{zoom=Math.min(55,Math.max(10,zoom*(1+e.deltaY*.001)));touch()},{passive:true});
 function tap(x,y){cam.updateMatrixWorld();G.updateMatrixWorld();let b=null,bd=36;const v=new T.Vector3();
-D.stars.forEach(s=>{if(!vis[s.ax])return;v.copy(pos.get(s.id)).applyMatrix4(G.matrixWorld).project(cam);if(v.z>1)return;const d=Math.hypot((v.x+1)/2*innerWidth-x,(1-v.y)/2*innerHeight-y);if(d<bd){bd=d;b=s}});
-if(b&&linkFrom&&linkFrom!==b.id){if(!D.links.some(l=>[l.a,l.b].sort().join()===[linkFrom,b.id].sort().join()))D.links.push({a:linkFrom,b:b.id,by:'user'});save();const id=b.id;linkFrom=null;lkb(0);toast('線をつなぎました');select(id)}
-else if(b)select(b.id);else if(!linkFrom)closeSh()}
-(function loop(){requestAnimationFrame(loop);if(!ptr.size&&D.stars.length&&Date.now()-idle>4000){ry+=.0015;dirty=1}
+SK().stars.forEach(s=>{if(!vis[s.ax])return;v.copy(pos.get(s.id)).applyMatrix4(G.matrixWorld).project(cam);if(v.z>1)return;const d=Math.hypot((v.x+1)/2*innerWidth-x,(1-v.y)/2*innerHeight-y);if(d<bd){bd=d;b=s}});
+if(b&&linkFrom&&linkFrom!==b.id){if(!SK().links.some(l=>[l.a,l.b].sort().join()===[linkFrom,b.id].sort().join()))SK().links.push({a:linkFrom,b:b.id,by:'user'});save();const id=b.id;linkFrom=null;lkb(0);toast('線をつなぎました');select(id);return}
+if(b)return select(b.id);
+if(!linkFrom&&zoom>26){let bp=null,bd2=44;pastList.forEach(s=>{const v2=pastPos.get(s.id).clone().project(cam);if(v2.z>1)return;const d=Math.hypot((v2.x+1)/2*innerWidth-x,(1-v2.y)/2*innerHeight-y);if(d<bd2){bd2=d;bp=s}});if(bp)return openSkyDialog(bp.id)}
+if(!linkFrom)closeSh()}
+(function loop(){requestAnimationFrame(loop);if(!ptr.size&&SK().stars.length&&Date.now()-idle>4000){ry+=.0015;dirty=1}
+if(pastMat)pastMat.opacity=Math.max(0,Math.min(1,(zoom-26)/20))*.85;
 if(!dirty)return;G.rotation.set(rx,ry,0);cam.position.set(px,py,zoom);R.render(S,cam);dirty=0})();
 /* ui */
 const sh=$('#sh'),dots=v=>`<div class=dots>強さ ${[1,2,3].map(i=>`<i data-i=${i} class="${i<=v?'on':''}"></i>`).join('')}</div>`;
@@ -127,36 +153,59 @@ function lkb(o){$('#lk').classList.toggle('on',o)}$('#lc').onclick=()=>{linkFrom
 function closeSh(){lkb(0);sh.classList.remove('open');if(sel||linkFrom){sel=null;linkFrom=null;build()}}
 let tm;function toast(t,ms=2400,act){const e=$('#tt');e.innerHTML=t+(act?` <button data-u=1 style="margin-left:.6em;padding:.2em .8em">元に戻す</button>`:'');e.classList.add('on');clearTimeout(tm);tm=setTimeout(()=>e.classList.remove('on'),ms)}
 $('#tt').onclick=e=>{if(e.target.dataset.u&&undo){D=JSON.parse(undo);undo=null;save();build();$('#tt').classList.remove('on')}};
-function pick(){lv=2;flow=null;sel=null;build();sheet(`<p class=w>まず、ひとつの活動を選んでください。</p><div class=r>${PRE.concat(D.acts.filter(a=>a.custom).map(a=>a.label)).map(p=>`<button class=c data-p="${esc(p)}">${esc(p)}</button>`).join('')}</div><p class=m>＋ 自由に活動を追加（例：推し活、一人で温泉に行く）</p><div class=r style="flex-wrap:nowrap"><input id=fi maxlength=30 placeholder="あなたの活動"><button class=p data-a=fadd style="white-space:nowrap">追加</button></div>`)}
-function startAct(label,custom){label=label.trim();if(!label)return;let a=D.acts.find(x=>x.label===label);if(!a){a={id:uid(),label,custom,createdAt:Date.now()};D.acts.push(a);save()}flow={act:a.id,label:a.label,i:0};axStep()}
+function skyLabel(){const s=SK(),nm=s.named?esc(s.name):'<span style="color:var(--dim)">名もない星空</span>',rng=s.start?`${fmt(s.start)}〜${fmt(s.end||s.start)}`:'観測前';
+$('#sn').innerHTML=`<button data-a=rename>${nm}<br><small>${rng}</small></button>`}
+$('#sn').onclick=()=>renameSky();
+function renameSky(){const s=SK();sheet(`<p class=m>星空の名前</p><input id=fi maxlength=24 value="${esc(s.name||'')}" placeholder="つけなくても大丈夫です"><div class=r><button class=p data-a=svn>保存</button></div>`)}
+function pick(){lv=2;flow=null;sel=null;build();sheet(`<p class=w>まず、ひとつの活動を選んでください。</p><div class=r>${PRE.concat(SK().acts.filter(a=>a.custom).map(a=>a.label)).map(p=>`<button class=c data-p="${esc(p)}">${esc(p)}</button>`).join('')}</div><p class=m>＋ 自由に活動を追加（例：推し活、一人で温泉に行く）</p><div class=r style="flex-wrap:nowrap"><input id=fi maxlength=30 placeholder="あなたの活動"><button class=p data-a=fadd style="white-space:nowrap">追加</button></div>`)}
+function startAct(label,custom){label=label.trim();if(!label)return;let a=SK().acts.find(x=>x.label===label);if(!a){a={id:uid(),label,custom,createdAt:Date.now()};SK().acts.push(a);save()}flow={act:a.id,label:a.label,i:0};axStep()}
 function axStep(){const x=AX[flow.i];lv=2;sheet(`<p class=m style="margin:0">${flow.i+1} / 4</p><div class=big style="color:${hex(x.c)}">${x.e} ${x.n}</div><p class=w>「${esc(flow.label)}」で、${x.q}は？</p><input id=fi maxlength=40 placeholder="自分の言葉で">${dots(2)}<div class=r><button class=p data-a=next>次へ</button><button data-a=skip>スキップ</button></div>`)}
-function nextAx(add){if(add){const t=$('#fi').value.trim();if(t){const s={id:uid(),act:flow.act,ax:flow.i,text:t,int:lv,seen:0,createdAt:Date.now()};D.stars.push(s);sel=s.id;save();build();setTimeout(()=>{if(sel===s.id){sel=null;build()}},900)}}
+function nextAx(add){if(add){const t=$('#fi').value.trim();if(t){const s={id:uid(),act:flow.act,ax:flow.i,text:t,int:lv,seen:0,createdAt:Date.now()};SK().stars.push(s);sel=s.id;save();build();setTimeout(()=>{if(sel===s.id){sel=null;build()}},900)}}
 flow.i++;if(flow.i<4)axStep();else{flow=null;sheet(`<p class=w>星が生まれました。</p><p class=m>もうひとつ、活動を追加してみますか？</p><div class=r><button class=p data-a=more>追加する</button><button data-a=look>眺める</button></div>`)}}
-function select(id){sel=id;const s=cur();if(!s)return;s.seen=(s.seen||0)+1;save();build();const a=D.acts.find(x=>x.id===s.act),p=pos.get(id);
-const near=D.stars.filter(u=>u.id!==id).map(u=>[u,p.distanceTo(pos.get(u.id))]).sort((x,y)=>x[1]-y[1]).slice(0,3).map(x=>x[0]),sm=D.stars.filter(u=>u.id!==id&&u.act===s.act),chip=u=>`<button class=c data-s="${u.id}">${AX[u.ax].e} ${esc(u.text)}</button>`;
+function select(id){sel=id;const s=cur();if(!s)return;s.seen=(s.seen||0)+1;save();build();const a=SK().acts.find(x=>x.id===s.act),p=pos.get(id);
+const near=SK().stars.filter(u=>u.id!==id).map(u=>[u,p.distanceTo(pos.get(u.id))]).sort((x,y)=>x[1]-y[1]).slice(0,3).map(x=>x[0]),sm=SK().stars.filter(u=>u.id!==id&&u.act===s.act),chip=u=>`<button class=c data-s="${u.id}">${AX[u.ax].e} ${esc(u.text)}</button>`;
 sheet(`<div class=big style="color:${hex(AX[s.ax].c)}">${AX[s.ax].e} ${AX[s.ax].n}</div><p class=w>${esc(s.text)}</p><p class=m>活動：${esc(a?a.label:'')}</p>${near.length?`<p class=m>この星と近い星</p><div class=r>${near.map(chip).join('')}</div>`:''}${sm.length?`<p class=m>同じ活動から生まれた星</p><div class=r>${sm.map(chip).join('')}</div>`:''}<div class=ac><button data-a=edit>✎<br>編集</button><button data-a=link>⟡<br>線でつなぐ</button><button data-a=name>✦<br>星座に名前</button><button data-a=del>✕<br>削除</button></div>`)}
-function comp(id){const seen=new Set([id]),q=[id];while(q.length){const c=q.pop();D.links.forEach(l=>{const o=l.a===c?l.b:l.b===c?l.a:null;if(o&&!seen.has(o)){seen.add(o);q.push(o)}})}return[...seen]}
+function comp(id){const seen=new Set([id]),q=[id];while(q.length){const c=q.pop();SK().links.forEach(l=>{const o=l.a===c?l.b:l.b===c?l.a:null;if(o&&!seen.has(o)){seen.add(o);q.push(o)}})}return[...seen]}
+function openSkyDialog(id){const s=D.skies.find(x=>x.id===id);if(!s)return;const nm=s.named?esc(s.name):'<span style="color:var(--dim)">名もない星空</span>',rng=s.start?`${fmt(s.start)}〜${fmt(s.end||s.start)}`:'';
+sheet(`<div class=big>${nm}</div><p class=m>${rng}</p><p class=w>この星空を観測しますか？</p><div class=r><button class=p data-a=goto data-id="${id}">はい</button><button data-a=close>いいえ</button></div>`)}
+function switchSky(id){D.cur=id;save();sh.classList.remove('open');rx=.3;ry=0;px=0;py=0;zoom=26;sel=null;linkFrom=null;build();toast('この星空を観測しています')}
 sh.onclick=e=>{const d=e.target.dataset;if(d.i){lv=+d.i;sh.querySelectorAll('.dots i').forEach(i=>i.classList.toggle('on',+i.dataset.i<=lv));return}
 if(!e.target.closest('button'))return;if(d.s)return select(d.s);if(d.p)return startAct(d.p,false);const a=d.a;
 if(a==='fadd')startAct($('#fi').value,true);else if(a==='next')nextAx(1);else if(a==='skip')nextAx(0);else if(a==='more')pick();else if(a==='close')closeSh();else if(a==='look'){closeSh();try{if(!localStorage.pph){localStorage.pph=1;toast('1本指で回転・2本指で移動とズーム・星をタップで詳細',6000)}}catch{}}
 else if(a==='edit'){const s=cur();lv=s.int;sheet(`<p class=m>${AX[s.ax].e} ${AX[s.ax].n}の言葉</p><input id=fi maxlength=40 value="${esc(s.text)}">${dots(s.int)}<div class=r><button class=p data-a=sv>保存</button></div>`)}
 else if(a==='sv'){const s=cur();s.text=$('#fi').value.trim()||s.text;s.int=lv;save();select(s.id)}
 else if(a==='link'){linkFrom=sel;sel=null;sh.classList.remove('open');build();lkb(1)}
-else if(a==='del'){undo=JSON.stringify(D);const id=sel;D.stars=D.stars.filter(s=>s.id!==id);D.links=D.links.filter(l=>l.a!==id&&l.b!==id);D.cons.forEach(c=>c.ids=c.ids.filter(x=>x!==id));D.cons=D.cons.filter(c=>c.ids.length>1);sel=null;save();closeSh();build();toast('星を削除しました',5000,1)}
-else if(a==='name'){if(comp(sel).length<2)return toast('まず「線でつなぐ」で星をつなぐと、星座に名前をつけられます',3500);const ex=D.cons.find(c=>c.ids.includes(sel));sheet(`<p class=m>この星座の名前</p><input id=fi maxlength=30 value="${esc(ex?ex.name:'')}" placeholder="例：一人時間の星座"><div class=r><button class=p data-a=svc>保存</button></div>`)}
-else if(a==='svc'){const n=$('#fi').value.trim(),ids=comp(sel),ex=D.cons.find(c=>c.ids.includes(sel));if(n){if(ex){ex.name=n;ex.ids=ids}else D.cons.push({id:uid(),name:n,ids});save();toast('星座に名前をつけました')}select(sel)}
+else if(a==='del'){undo=JSON.stringify(D);const id=sel;SK().stars=SK().stars.filter(s=>s.id!==id);SK().links=SK().links.filter(l=>l.a!==id&&l.b!==id);SK().cons.forEach(c=>c.ids=c.ids.filter(x=>x!==id));SK().cons=SK().cons.filter(c=>c.ids.length>1);sel=null;save();closeSh();build();toast('星を削除しました',5000,1)}
+else if(a==='name'){if(comp(sel).length<2)return toast('まず「線でつなぐ」で星をつなぐと、星座に名前をつけられます',3500);const ex=SK().cons.find(c=>c.ids.includes(sel));sheet(`<p class=m>この星座の名前</p><input id=fi maxlength=30 value="${esc(ex?ex.name:'')}" placeholder="例：一人時間の星座"><div class=r><button class=p data-a=svc>保存</button></div>`)}
+else if(a==='svc'){const n=$('#fi').value.trim(),ids=comp(sel),ex=SK().cons.find(c=>c.ids.includes(sel));if(n){if(ex){ex.name=n;ex.ids=ids}else SK().cons.push({id:uid(),name:n,ids});save();toast('星座に名前をつけました')}select(sel)}
+else if(a==='svn'){const s=SK();s.name=$('#fi').value.trim();s.named=!!s.name;save();closeSh();skyLabel()}
+else if(a==='goto')switchSky(d.id);
+else if(a==='contact')window.open(TW,'_blank');
 else if(a==='exp'){const b=new Blob([JSON.stringify(D,null,1)],{type:'application/json'}),l=document.createElement('a');l.href=URL.createObjectURL(b);l.download='my-planetarium.json';l.click()}
-else if(a==='wipe'){if(confirm('すべての星を削除します。元に戻せません。')){D={v:1,acts:[],stars:[],links:[],cons:[]};save();closeSh();build();pick()}}};
+else if(a==='wipe'){if(confirm('この星空の記録をすべて削除します。元に戻せません。')){const s=SK();s.acts=[];s.stars=[];s.links=[];s.cons=[];s.start=null;s.end=null;s.name='';s.named=false;save();closeSh();build();pick()}}};
 $('#add').onclick=pick;
-$('#bc').onclick=()=>{const L=D.cons.map(c=>({n:c.name,ids:c.ids.filter(i=>D.stars.some(s=>s.id===i))})).filter(c=>c.ids.length);
-sheet(`<p class=w>星座</p>${L.length?L.map(c=>`<button class=c data-s="${c.ids[0]}">${esc(c.n)}（${c.ids.length}）</button>`).join(' '):'<p class=m>星をタップ →「線を引く」で星をつなぐと、その星座に名前をつけられます。</p>'}`)};
-$('#bm').onclick=()=>sheet(`<p class=w>設定</p><p class=m>データはこの端末にだけ保存されています。</p><div class=r><button data-a=exp>書き出し（JSON）</button><button data-a=wipe>すべて削除</button></div>`);
-$('#bf').onclick=()=>{closeSh();$('#fin').classList.add('on')};$('#fin').onclick=()=>$('#fin').classList.remove('on');
+$('#bc').onclick=()=>{const L=SK().cons.map(c=>({n:c.name,ids:c.ids.filter(i=>SK().stars.some(s=>s.id===i))})).filter(c=>c.ids.length);
+sheet(`<p class=w>星座</p>${L.length?L.map(c=>`<button class=c data-s="${c.ids[0]}">${esc(c.n)}（${c.ids.length}）</button>`).join(' '):'<p class=m>星をタップ →「線でつなぐ」で星をつなぐと、その星座に名前をつけられます。</p>'}`)};
+$('#bm').onclick=()=>sheet(`<p class=w>設定</p><p class=m>データはこの端末にだけ保存されています。</p><div class=r><button data-a=exp>書き出し（JSON）</button><button data-a=wipe>この星空を削除</button></div>`);
+function finHTML(){const s=SK(),nm=s.named?esc(s.name):'名もない星空',rng=s.start?`${fmt(s.start)}〜${fmt(s.end)}`:'';
+return`<small>OBSERVATION COMPLETE</small><h2>観測完了。</h2><p>${nm}<br>${rng}</p><p style="font-size:15px">これが、いまのアナタの星空です。</p><div class=r style="justify-content:center;margin-top:1em"><button class=p data-a=cont>続きを観測する</button><button data-a=nextsky>次の観測へ</button></div>`}
+$('#bf').onclick=()=>{closeSh();SK().closed=true;save();$('#fin').innerHTML=finHTML();$('#fin').classList.add('on')};
+$('#fin').onclick=e=>{const a=e.target.dataset.a;if(a==='cont'){SK().closed=false;save();$('#fin').classList.remove('on')}
+else if(a==='nextsky'){$('#fin').classList.remove('on');newSkyFlow()}
+else if(!a)$('#fin').classList.remove('on')};
+function newSkyFlow(){const s=blankSky();D.skies.push(s);D.cur=s.id;save();rx=.3;ry=0;px=0;py=0;zoom=26;sel=null;linkFrom=null;build();pick()}
 $('#tg').innerHTML='<button data-x=all>全部</button>'+AX.map((x,i)=>`<button data-x=${i}>${x.e} ${x.n}</button>`).join('');
-function chips(){[...$('#tg').children].forEach(b=>{const a=b.dataset.x==='all',on=a?vis.every(Boolean):vis[+b.dataset.x];b.style.opacity=on?1:.35;b.style.borderColor=on&&!a?hex(AX[+b.dataset.x].c):''})}
+function chips(){[...$('#tg').children].forEach(b=>{const a=b.dataset.x==='all',on=a?vis.every(Boolean):vis[+b.dataset.x];b.classList.toggle('off',!on);b.style.borderColor=on&&!a?hex(AX[+b.dataset.x].c):''})}
 $('#tg').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=b.dataset.x;if(x==='all')vis.fill(1);else{const i=+x;if(vis.every(Boolean))vis.fill(0),vis[i]=1;else vis[i]^=1;if(!vis.some(Boolean))vis.fill(1)}chips();build()};chips();
 sh.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=sh.querySelector('.p');b&&b.click()}});
-$('#go').onclick=()=>{$('#ti').classList.add('h');if(!D.stars.length)setTimeout(pick,500)};
-build();if(D.stars.length)$('#go').textContent='星空を見る';
+$('#go').onclick=()=>{$('#ti').classList.add('h');if(!SK().stars.length)setTimeout(pick,500)};
+$('#how').onclick=()=>{sheet(`<p class=w>使い方</p>
+<p class=m>観測とは</p><p>好き・嫌い・得意・苦手を、自分の言葉で記録します。記録は星になり、3D空間に浮かびます。</p>
+<p class=m>操作</p><p>1本指で回転、2本指で移動とズームができます。星をタップすると詳細が見られます。ズームで遠くへ引くと、過去に観測した星空も見えてきます。</p>
+<p class=m>星座</p><p>星の詳細から「線でつなぐ」を選ぶと、星同士をつなげます。つながった星には、自分で名前をつけられます。</p>
+<p class=m>データの保存について</p><p>星空のデータは、この端末とブラウザの中だけに保存されます。外部のサーバーに送られたり、収集されたりすることはありません。</p>
+<p class=m>ご相談・不具合</p><p>不具合や開発のご相談は、下のボタンからお願いします。</p><div class=r><button data-a=contact>📡 交信</button></div>`)};
+$('#contact').onclick=()=>window.open(TW,'_blank');
+build();
 if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script></body></html>
