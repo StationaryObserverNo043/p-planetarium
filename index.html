@@ -237,7 +237,7 @@ $('#add').onclick=pick;
 function openMore(){sheet(`<p class=w>その他</p><div class=r><button data-a=shoot>📷️ 撮影</button><button data-a=openlist>🌌 一覧</button><button data-a=opensettings>⚙ 設定</button></div>`)}
 $('#bo').onclick=openMore;
 $('#bc').onclick=()=>{const L=SK().cons.map(c=>({n:c.name,ids:c.ids.filter(i=>SK().stars.some(s=>s.id===i))})).filter(c=>c.ids.length);
-sheet(`<p class=w>星座</p>${L.length?L.map(c=>`<button class=c data-s="${c.ids[0]}">${esc(c.n)}（${c.ids.length}）</button>`).join(' '):'<p class=m>星をタップ →「線で結ぶ」で星を結ぶと、その星座に名前をつけられます。</p>'}`)};
+sheet(`<p class=w>星座</p>${L.length?L.map(c=>`<button class=c data-s="${c.ids[0]}">${esc(c.n)}（合計${c.ids.length}）</button>`).join(' '):'<p class=m>星をタップ →「線で結ぶ」で星を結ぶと、その星座に名前をつけられます。</p>'}`)};
 function openSettings(){sheet(`<p class=w>設定</p><p class=m>データはこの端末にだけ保存されています。銀河${D.galaxy||1}・星空は1つの銀河につき${MAX_SKIES}個までです。</p><div class=r><button class="sw${orbOn?' on':''}" data-a=orbtoggle><i></i>🪐 惑星軌道図</button></div><div class=r><button data-a=shareimg>📷 画像を保存</button><button data-a=sharex>🕊 Xでシェア</button></div><div class=r><button data-a=exp>書き出し（JSON）</button><button data-a=wipe>この星空を削除</button></div><div class=r style="margin-top:1em"><button data-a=title>📔 TITLE</button></div>`)}
 sh.addEventListener('click',e=>{if(e.target.closest('button')?.dataset.a==='title'){closeSh();$('#ti').classList.remove('h')}});
 function finHTML(){const s=SK(),nm=s.named?esc(s.name):'名もない星空',rng=s.start?`${fmt(s.start)}〜${fmt(s.end)}`:'',
