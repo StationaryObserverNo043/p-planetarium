@@ -71,7 +71,7 @@ const hex=c=>'#'+c.toString(16).padStart(6,'0');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
 const hash=s=>{let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
-const rnd=(id,i)=>(hash(id+i)%2000)/1000-1;
+const rnd=(id,tag)=>(hash(id+':'+tag)%2000)/1000-1;
 const fmt=t=>{const d=new Date(t);return `${d.getMonth()+1}/${d.getDate()}`};
 function blankSky(g=1){return{id:uid(),g,name:'',named:false,start:null,end:null,closed:false,acts:[],stars:[],links:[],cons:[]}}
 function migrate(raw){
@@ -100,9 +100,9 @@ fragmentShader:'varying vec3 v;varying vec3 f;void main(){vec2 p=(gl_PointCoord-
 /* layout */
 function layout(){pos.clear();const ai={};
 SK().acts.forEach((a,i)=>{if(!i){ai[a.id]=new T.Vector3();return}const y=((i*.618)%1)*2-1,t=i*2.39996,r=Math.sqrt(1-y*y);ai[a.id]=new T.Vector3(Math.cos(t)*r,y,Math.sin(t)*r).multiplyScalar(7.2)});
-SK().stars.forEach(s=>{const d=new T.Vector3(rnd(s.id,1),rnd(s.id,2),rnd(s.id,3)).normalize().multiplyScalar(2.6+3.6*Math.abs(rnd(s.id,4)));
+SK().stars.forEach(s=>{const d=new T.Vector3(rnd(s.id,'px'),rnd(s.id,'py'),rnd(s.id,'pz')).normalize().multiplyScalar(2.6+3.6*Math.abs(rnd(s.id,'pr')));
 const p=(ai[s.act]||new T.Vector3()).clone().add(d).addScaledVector(DIR[s.ax],1.0).multiply(new T.Vector3(1,1.15,1)),l=p.length();if(l>9.5)p.setLength(9.5+2.2*(1-Math.exp(-(l-9.5)/3)));pos.set(s.id,p)})}
-const look=s=>({sf:.55+1.15*Math.abs(rnd(s.id,5)),ring:Math.abs(rnd(s.id,6))<.32?1:0,tilt:rnd(s.id,7)*3.14,glow:.5+1.1*Math.abs(rnd(s.id,8))});
+const look=s=>({sf:.55+1.15*Math.abs(rnd(s.id,'size')),ring:Math.abs(rnd(s.id,'ring'))<.4?1:0,tilt:rnd(s.id,'tilt')*3.14,glow:.5+1.1*Math.abs(rnd(s.id,'glow'))});
 const bg=t=>{const x=[...t.toLowerCase()],s=new Set();if(x.length===1)s.add(x[0]);for(let i=0;i<x.length-1;i++)s.add(x[i]+x[i+1]);return s};
 const sim=(a,b)=>{let n=0;a.forEach(x=>b.has(x)&&n++);return n/(a.size+b.size-n||1)};
 function cands(){const st=SK().stars,B=st.map(s=>bg(s.text)),k=new Set(),L=[];
