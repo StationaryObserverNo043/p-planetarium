@@ -94,6 +94,7 @@ R.setPixelRatio(Math.min(devicePixelRatio,2));S.add(G);
 const t0=Date.now();
 let dirty=1,zoom=26,sel=null,linkFrom=null,lv=2,flow=null,undo=null,rx=.3,ry=0,px=0,py=0,idle=Date.now(),vrx=0,vry=0,orbOn=true,ambRamp=1;
 const BASE_SPIN=.0015,FRICTION=.95;
+const pos=new Map(),pastPos=new Map(),vis=[1,1,1,1],ptr=new Map();let down=null,pastList=[],pastMats=[],pastGroup=null;
 const fx=$('#fx'),fxctx=fx.getContext('2d'),FXCOL=['#ffe14d','#b6ff3d','#ff2dd4'],FXSYM=['✦','✧','⋆','∴','◇','△','▽','✳','⟡','✶','⬡','◈'];let particles=[];
 function spawnFx(x,y,n,bvx=0,bvy=0){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,sp=.5+Math.random()*2.6,ox=x+(Math.random()-.5)*16,oy=y+(Math.random()-.5)*16,sym=Math.random()<.4?FXSYM[(Math.random()*FXSYM.length)|0]:null;
 particles.push({x:ox,y:oy,vx:Math.cos(a)*sp+bvx*.1,vy:Math.sin(a)*sp+bvy*.1,rot:Math.random()*6.28,vr:(Math.random()-.5)*.2,life:1,col:FXCOL[(Math.random()*3)|0],size:sym?7+Math.random()*7:2+Math.random()*2.8,sym})}}
@@ -102,7 +103,6 @@ if(ptr.size){ptr.forEach(([x,y])=>{if(Math.random()<.4)spawnFx(x,y,1+((Math.rand
 if(particles.length){fxctx.clearRect(0,0,fx.width,fx.height);particles=particles.filter(p=>p.life>0.02);particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vx*=.965;p.vy*=.965;p.rot+=p.vr;p.life-=.016;fxctx.globalAlpha=Math.max(0,p.life);fxctx.fillStyle=p.col;
 if(p.sym){fxctx.save();fxctx.translate(p.x,p.y);fxctx.rotate(p.rot);fxctx.font=`${Math.max(5,p.size*p.life+p.size*.4)}px sans-serif`;fxctx.textAlign='center';fxctx.textBaseline='middle';fxctx.fillText(p.sym,0,0);fxctx.restore()}
 else{fxctx.beginPath();fxctx.arc(p.x,p.y,Math.max(.4,p.size*p.life),0,7);fxctx.fill()}});fxctx.globalAlpha=1}})();
-const pos=new Map(),pastPos=new Map(),vis=[1,1,1,1],ptr=new Map();let down=null,pastList=[],pastMats=[],pastGroup=null;
 function resize(){R.setSize(innerWidth,innerHeight);cam.fov=innerWidth<innerHeight?75:55;cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();fx.width=innerWidth;fx.height=innerHeight;dirty=1}
 addEventListener('resize',resize);resize();
 {const t=$('#tw');for(let i=0;i<70;i++){const e=document.createElement('i'),z=1+Math.random()*1.8;e.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${z}px;height:${z}px;animation-duration:${3+Math.random()*5}s;animation-delay:${-Math.random()*8}s`;t.append(e)}}
