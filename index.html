@@ -31,8 +31,11 @@ input:focus{border-color:#7f93ff}
 #tg button.off{opacity:.35;background:rgba(8,14,44,.4)}
 #tg button.on-c{background:var(--ax);border-color:var(--ax);color:#060c28}
 #add{align-self:flex-end;font-size:15px;padding:.7em 1.3em;border-color:#7f93ff;background:rgba(127,147,255,.25);line-height:1}
-#bk{width:48px;height:48px;padding:0;font-size:20px;line-height:1;background:rgba(8,14,44,.7)}
+#bk,#bp{width:48px;height:48px;padding:0;font-size:20px;line-height:1;background:rgba(8,14,44,.7)}
 #bkrow{display:flex;justify-content:space-between;align-items:center}
+#bktools{display:flex;gap:8px}
+#tg button[data-x=filter]{background:rgba(127,147,255,.18);border-color:#7f93ff}
+#tg button[data-x=filter].on-f{background:#7f93ff;color:#060c28}
 #sh{position:fixed;left:0;right:0;bottom:0;max-height:66vh;overflow:auto;z-index:35;background:rgba(8,14,44,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);border-radius:18px 18px 0 0;padding:18px 18px calc(var(--sa) + 18px);transform:translateY(105%);transition:transform .35s ease;line-height:1.7}
 #sh.open{transform:none}
 .big{font-size:20px;letter-spacing:.1em}.w{font-size:18px;margin:.3em 0 .5em;line-height:1.6}.m{font-size:13px;color:var(--dim);margin:.9em 0 .3em}
@@ -62,7 +65,7 @@ input:focus{border-color:#7f93ff}
 <div id="tw"></div><canvas id="cv"></canvas><canvas id="fx"></canvas><div id="flash"></div><div id="lk">結ぶ星をタップ<button id="lc">やめる</button></div>
 <div id="sn"></div>
 <div id="top"><button id="bc">✦ 星座</button><button id="bf">◎ 観測を終える</button><button id="bo" aria-label="その他">⋯</button></div>
-<div id="bar"><div id="bkrow"><button id="bk">🧭</button><button id="add">＋ 星を追加</button></div><div id="tg"></div></div>
+<div id="bar"><div id="bkrow"><div id="bktools"><button id="bk">🧭</button><button id="bp">📷️</button></div><button id="add">＋ 星を追加</button></div><div id="tg"></div></div>
 <div id="sh"></div><div id="tt"></div>
 <div id="fin"></div>
 <div id="ti"><button id="go">🔭 星空を見る</button><div class="tir"><button id="how">🌐 使い方</button><button id="contact">📡 交信</button></div></div>
@@ -94,7 +97,14 @@ const cur=()=>SK().stars.find(s=>s.id===sel);
 const cv=$('#cv'),R=new T.WebGLRenderer({canvas:cv,alpha:true,preserveDrawingBuffer:true}),S=new T.Scene(),cam=new T.PerspectiveCamera(55,1,.1,300),G=new T.Group();
 R.setPixelRatio(Math.min(devicePixelRatio,2));S.add(G);
 const t0=Date.now();
-let dirty=1,zoom=24,sel=null,linkFrom=null,lv=2,flow=null,undo=null,rx=.3,ry=0,px=0,py=0,idle=Date.now(),vrx=0,vry=0,orbOn=true,ambRamp=1,actFilter=null;
+let dirty=1,zoom=30,sel=null,linkFrom=null,lv=2,flow=null,undo=null,rx=.3,ry=0,px=0,py=0,idle=Date.now(),vrx=0,vry=0,orbOn=true,ambRamp=1,actFilter=null,tween=null;
+const DEF={rx:.3,zoom:30};
+function angDelta(cur,target){const tw=Math.PI*2;let d=(target-cur)%tw;if(d>Math.PI)d-=tw;else if(d<-Math.PI)d+=tw;return d}
+function easeOutQuart(t){return 1-Math.pow(1-t,4)}
+function startReset(){const tw=Math.PI*2,DUR=900,F=DUR/16.67;let ryTarget;
+if(Math.abs(vry)>.0005){const dir=Math.sign(vry),mod=((ry%tw)+tw)%tw;let fwd=dir>0?(tw-mod)%tw:mod;if(fwd<1e-4)fwd=tw;ryTarget=ry+dir*fwd}
+else ryTarget=ry+angDelta(ry,0);
+tween={t0:performance.now(),dur:DUR,from:{rx,ry,px,py,zoom},to:{rx:DEF.rx,ry:ryTarget,px:0,py:0,zoom:DEF.zoom},m0rx:vrx*F,m0ry:vry*F}}
 const BASE_SPIN=.0015,FRICTION=.95;
 const pos=new Map(),pastPos=new Map(),vis=[1,1,1,1],ptr=new Map();let down=null,pastList=[],pastMats=[],pastGroup=null;
 const fx=$('#fx'),fxctx=fx.getContext('2d'),FXCOL=['#ffe14d','#b6ff3d','#ff2dd4'],FXSYM=['✦','✧','⋆','∴','◇','△','▽','✳','⟡','✶','⬡','◈'];let particles=[];
@@ -159,7 +169,7 @@ SK().acts.forEach(a=>{const l=SK().stars.filter(s=>s.act===a.id&&vis[s.ax]).sort
 seg(same,0x6f80c8,.25);seg(cands().filter(ok),0x9fb0ff,.1);seg(SK().links.map(l=>[l.a,l.b]).filter(ok),0xffe9a8,.8);dirty=1;skyLabel()}
 /* input */
 const touch=()=>{idle=Date.now();dirty=1};
-cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,[e.clientX,e.clientY]);down=ptr.size===1?{x:e.clientX,y:e.clientY,t:Date.now(),m:0}:null;vrx=0;vry=0;ambRamp=0;spawnFx(e.clientX,e.clientY,12);touch()});
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,[e.clientX,e.clientY]);down=ptr.size===1?{x:e.clientX,y:e.clientY,t:Date.now(),m:0}:null;vrx=0;vry=0;ambRamp=0;tween=null;spawnFx(e.clientX,e.clientY,12);touch()});
 cv.addEventListener('pointermove',e=>{const p=ptr.get(e.pointerId);if(!p)return;const dx=e.clientX-p[0],dy=e.clientY-p[1];spawnFx(e.clientX,e.clientY,2,dx,dy);
 if(ptr.size===2){const o=[...ptr].find(([k])=>k!==e.pointerId)[1];zoom=Math.min(60,Math.max(4,zoom*Math.hypot(p[0]-o[0],p[1]-o[1])/Math.hypot(e.clientX-o[0],e.clientY-o[1])));const k=2*Math.tan(cam.fov*Math.PI/360)*zoom/innerHeight/2;px=Math.max(-44,Math.min(44,px-dx*k));py=Math.max(-44,Math.min(44,py+dy*k))}
 else{const dry=dx*.0095,drx=dy*.0095;ry+=dry;rx=Math.max(-1.4,Math.min(1.4,rx+drx));vry=dry;vrx=drx;if(down)down.m+=Math.abs(dx)+Math.abs(dy)}
@@ -174,7 +184,15 @@ if(b)return select(b.id);
 if(!linkFrom&&zoom>16){let bp=null,bd2=48;pastList.forEach(s=>{const v2=pastPos.get(s.id).clone().project(cam);if(v2.z>1)return;const d=Math.hypot((v2.x+1)/2*innerWidth-x,(1-v2.y)/2*innerHeight-y);if(d<bd2){bd2=d;bp=s}});if(bp)return openSkyDialog(bp.id)}
 if(!linkFrom)closeSh()}
 (function loop(){requestAnimationFrame(loop);
-if(!ptr.size&&SK().stars.length){
+if(tween){const t=Math.min(1,(performance.now()-tween.t0)/tween.dur),t2=t*t,t3=t2*t,
+h=(p0,m0,p1)=>(2*t3-3*t2+1)*p0+(t3-2*t2+t)*m0+(-2*t3+3*t2)*p1,
+e=easeOutQuart(t),L=(a,b)=>a+(b-a)*e;
+rx=Math.max(-1.4,Math.min(1.4,h(tween.from.rx,tween.m0rx,tween.to.rx)));
+ry=h(tween.from.ry,tween.m0ry,tween.to.ry);
+px=L(tween.from.px,tween.to.px);py=L(tween.from.py,tween.to.py);zoom=L(tween.from.zoom,tween.to.zoom);
+if(t>=1){tween=null;ambRamp=1;vry=0;vrx=0}
+dirty=1}
+else if(!ptr.size&&SK().stars.length){
 if(Math.hypot(vry,vrx)>.00008){ry+=vry;rx=Math.max(-1.4,Math.min(1.4,rx+vrx));vry*=FRICTION;vrx*=FRICTION;ambRamp=0}
 else{vry=0;vrx=0;ambRamp=Math.min(1,ambRamp+.02);ry+=BASE_SPIN*ambRamp}
 dirty=1}
@@ -223,9 +241,9 @@ if(SK().links.length!==before){SK().cons.forEach(c=>{if(c.ids.includes(id)&&comp
 function comp(id){const seen=new Set([id]),q=[id],E=edgesAll();while(q.length){const c=q.pop();E.forEach(([a,b])=>{const o=a===c?b:b===c?a:null;if(o&&!seen.has(o)){seen.add(o);q.push(o)}})}return[...seen]}
 function openSkyDialog(id){const s=D.skies.find(x=>x.id===id);if(!s)return;const nm=s.named?esc(s.name):'<span style="color:var(--dim)">名もない星空</span>',rng=s.start?`${fmt(s.start)}〜${fmt(s.end||s.start)}`:'';
 sheet(`<div class=big>${nm}</div><p class=m>${rng}</p><p class=w>この星空を観測しますか？</p><div class=r><button class=p data-a=goto data-id="${id}">はい</button><button data-a=close>いいえ</button></div>`)}
-function switchSky(id){D.cur=id;save();sh.classList.remove('open');rx=.3;ry=0;px=0;py=0;zoom=24;sel=null;linkFrom=null;actFilter=null;build();toast('この星空を観測しています')}
+function switchSky(id){D.cur=id;save();sh.classList.remove('open');rx=.3;ry=0;px=0;py=0;zoom=30;sel=null;linkFrom=null;actFilter=null;build();toast('この星空を観測しています')}
 sh.onclick=e=>{const d=e.target.dataset;if(d.i){lv=+d.i;sh.querySelectorAll('.dots i').forEach(i=>i.classList.toggle('on',+i.dataset.i<=lv));return}
-if(d.act){if(d.act==='all')actFilter=null;else{if(!actFilter)actFilter=new Set();if(actFilter.has(d.act))actFilter.delete(d.act);else actFilter.add(d.act);if(!actFilter.size)actFilter=null}build();openActFilter();return}
+if(d.act){if(d.act==='all')actFilter=null;else{if(!actFilter)actFilter=new Set();if(actFilter.has(d.act))actFilter.delete(d.act);else actFilter.add(d.act);if(!actFilter.size)actFilter=null}build();chips();openActFilter();return}
 if(!e.target.closest('button'))return;if(d.s)return select(d.s);if(d.p)return startAct(d.p,false);const a=d.a;
 if(a==='fadd')startAct($('#fi').value,true);else if(a==='next')nextAx(1);else if(a==='skip')nextAx(0);else if(a==='more')pick();else if(a==='close')closeSh();else if(a==='link'){linkFrom=sel;sel=null;sh.classList.remove('open');build();lkb(1)}
 else if(a==='unlink'){unlinkStar(sel);build();toast('結びを解除しました');select(sel)}
@@ -247,11 +265,12 @@ else if(a==='exp'){const b=new Blob([JSON.stringify(D,null,1)],{type:'applicatio
 else if(a==='orbtoggle'){orbOn=!orbOn;build();openSettings()}
 else if(a==='wipe'){if(confirm('この星空の記録をすべて削除します。元に戻せません。')){const s=SK();s.acts=[];s.stars=[];s.links=[];s.cons=[];s.start=null;s.end=null;s.name='';s.named=false;save();closeSh();build();pick()}}};
 $('#add').onclick=pick;
-$('#bk').onclick=()=>{rx=.3;ry=0;px=0;py=0;zoom=24;vrx=0;vry=0;ambRamp=1;linkFrom=null;lkb(0);touch();toast('元の位置に戻しました',1800)};
+$('#bk').onclick=()=>{vrx=0;vry=0;linkFrom=null;lkb(0);startReset();touch();toast('元の位置に戻しています',1800)};
+$('#bp').onclick=()=>saveImage(()=>toast('画像を保存しました',3000));
 function openActFilter(){const acts=SK().acts,on=a=>actFilter&&actFilter.has(a.id);
 const chip=a=>`<button class=c data-act="${a.id}" style="${on(a)?'background:#7f93ff;color:#060c28;border-color:#7f93ff':''}">${esc(a.label)}</button>`;
 sheet(`<p class=w>活動で絞る</p><p class=m>選んだ活動の星だけ、空に残します。</p><div class=r><button data-act=all style="${!actFilter?'background:#7f93ff;color:#060c28;border-color:#7f93ff':''}">全部</button>${acts.map(chip).join('')}</div>`)}
-function openMore(){sheet(`<p class=w>その他</p><div class=r><button data-a=shoot>📷️ 撮影</button><button data-a=openlist>🌌 一覧</button><button data-a=openact>🗂 活動で絞る</button><button data-a=opensettings>⚙ 設定</button></div>`)}
+function openMore(){sheet(`<p class=w>その他</p><div class=r><button data-a=openlist>🌌 一覧</button><button data-a=opensettings>⚙ 設定</button></div>`)}
 $('#bo').onclick=openMore;
 $('#bc').onclick=()=>{const L=SK().cons.map(c=>({n:c.name,ids:c.ids.filter(i=>SK().stars.some(s=>s.id===i))})).filter(c=>c.ids.length);
 sheet(`<p class=w>星座</p>${L.length?L.map(c=>`<button class=c data-s="${c.ids[0]}">${esc(c.n)}（合計${c.ids.length}）</button>`).join(' '):'<p class=m>星をタップ →「線で結ぶ」で星を結ぶと、その星座に名前をつけられます。</p>'}`)};
@@ -269,11 +288,11 @@ else if(a==='newgalaxy'){$('#fin').classList.remove('on');newGalaxy()}
 else if(a==='shareimg')saveImage(()=>toast('画像を保存しました',3000));
 else if(a==='sharex')saveImage(()=>{toast('画像を保存しました。Xの下書きに画像を添付してください',6000);setTimeout(shareX,500)});
 else if(!a)$('#fin').classList.remove('on')};
-function newSkyFlow(){const s=blankSky(D.galaxy||1);D.skies.push(s);D.cur=s.id;save();rx=.3;ry=0;px=0;py=0;zoom=24;sel=null;linkFrom=null;actFilter=null;build();pick()}
-function newGalaxy(){D.galaxy=(D.galaxy||1)+1;const s=blankSky(D.galaxy);D.skies.push(s);D.cur=s.id;save();rx=.3;ry=0;px=0;py=0;zoom=24;sel=null;linkFrom=null;actFilter=null;build();toast('新しい銀河へ移動しました',4000);pick()}
-$('#tg').innerHTML='<button data-x=all>全部</button>'+AX.map((x,i)=>`<button data-x=${i}>${x.e} ${x.n}</button>`).join('');
-function chips(){[...$('#tg').children].forEach(b=>{const a=b.dataset.x==='all',on=a?vis.every(Boolean):vis[+b.dataset.x];b.classList.toggle('off',!on);if(!a){b.classList.toggle('on-c',on&&!vis.every(Boolean));b.style.setProperty('--ax',hex(AX[+b.dataset.x].c));b.style.borderColor=on?hex(AX[+b.dataset.x].c):''}})}
-$('#tg').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=b.dataset.x;if(x==='all')vis.fill(1);else{const i=+x;if(vis.every(Boolean))vis.fill(0),vis[i]=1;else vis[i]^=1;if(!vis.some(Boolean))vis.fill(1)}chips();build()};chips();
+function newSkyFlow(){const s=blankSky(D.galaxy||1);D.skies.push(s);D.cur=s.id;save();rx=.3;ry=0;px=0;py=0;zoom=30;sel=null;linkFrom=null;actFilter=null;build();pick()}
+function newGalaxy(){D.galaxy=(D.galaxy||1)+1;const s=blankSky(D.galaxy);D.skies.push(s);D.cur=s.id;save();rx=.3;ry=0;px=0;py=0;zoom=30;sel=null;linkFrom=null;actFilter=null;build();toast('新しい銀河へ移動しました',4000);pick()}
+$('#tg').innerHTML='<button data-x=filter aria-label="活動で絞る">🗂</button><button data-x=all>全部</button>'+AX.map((x,i)=>`<button data-x=${i}>${x.e} ${x.n}</button>`).join('');
+function chips(){[...$('#tg').children].forEach(b=>{if(b.dataset.x==='filter'){b.classList.toggle('on-f',!!actFilter);return}const a=b.dataset.x==='all',on=a?vis.every(Boolean):vis[+b.dataset.x];b.classList.toggle('off',!on);if(!a){b.classList.toggle('on-c',on&&!vis.every(Boolean));b.style.setProperty('--ax',hex(AX[+b.dataset.x].c));b.style.borderColor=on?hex(AX[+b.dataset.x].c):''}})}
+$('#tg').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=b.dataset.x;if(x==='filter')return openActFilter();if(x==='all')vis.fill(1);else{const i=+x;if(vis.every(Boolean))vis.fill(0),vis[i]=1;else vis[i]^=1;if(!vis.some(Boolean))vis.fill(1)}chips();build()};chips();
 sh.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=sh.querySelector('.p');b&&b.click()}});
 $('#go').onclick=()=>{$('#ti').classList.add('h');if(!SK().stars.length)setTimeout(pick,500)};
 $('#how').onclick=()=>{sheet(`<p class=w>使い方</p>
@@ -282,7 +301,8 @@ $('#how').onclick=()=>{sheet(`<p class=w>使い方</p>
 <p class=m>星座</p><p>星の詳細から「線で結ぶ」を選ぶと、星同士を結びます。結ばれた星には、自分で名前をつけられます。</p>
 <p class=m>銀河</p><p>ひとつの銀河には、星空を12個まで集められます。いっぱいになると、観測完了の画面に「🌌 新たな銀河へ」ボタンが出て、新しい銀河で観測を続けられます。これまでの銀河の星空は消えず、書き出したデータの中に残ります。</p>
 <p class=m>向きを戻す</p><p>画面左下の🧭を押すと、星空の向きとズームを、最初に見える位置へ戻せます。</p>
-<p class=m>活動で絞る</p><p>「⋯その他」の中の「🗂 活動で絞る」から、「食事」「SNS」のように活動を選ぶと、その活動から生まれた星だけを残して眺められます。</p>
+<p class=m>活動で絞る</p><p>画面下のフィルター列、いちばん左の🗂から、「食事」「SNS」のように活動を選ぶと、その活動から生まれた星だけを残して眺められます。</p>
+<p class=m>撮影</p><p>画面左下の📷️で、今の星空をいつでも画像として保存できます。</p>
 <p class=m>データの保存について</p><p>星空のデータは、この端末とブラウザの中だけに保存されます。外部のサーバーに送られたり、収集されたりすることはありません。</p>
 <p class=m>ご相談・不具合</p><p>不具合や開発のご相談は、下のボタンからお願いします。</p><div class=r><button data-a=contact>📡 交信</button></div>`)};
 $('#contact').onclick=()=>window.open(TW,'_blank');
