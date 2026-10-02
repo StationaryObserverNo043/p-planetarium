@@ -64,8 +64,8 @@ input:focus{border-color:#7f93ff}
 </style></head><body>
 <div id="tw"></div><canvas id="cv"></canvas><canvas id="fx"></canvas><div id="flash"></div><div id="lk">結ぶ星をタップ<button id="lc">やめる</button></div>
 <div id="sn"></div>
-<div id="top"><button id="bc">✦ 星座</button><button id="bf">◎ 観測を終える</button><button id="bo" aria-label="その他">⋯</button></div>
-<div id="bar"><div id="bkrow"><div id="bktools"><button id="bk">🧭</button><button id="bp">📷️</button></div><button id="add">＋ 星を追加</button></div><div id="tg"></div></div>
+<div id="top"><button id="bc">✦ 星座</button><button id="bg">🚀</button><button id="bf">◎ 観測を終える</button><button id="bo" aria-label="設定">⚙️</button></div>
+<div id="bar"><div id="bkrow"><div id="bktools"><button id="bk">🧭</button><button id="bp">📷️</button><button id="bs">🕊️</button><button id="bq">📋️</button></div><button id="add">＋ 星を追加</button></div><div id="tg"></div></div>
 <div id="sh"></div><div id="tt"></div>
 <div id="fin"></div>
 <div id="ti"><button id="go">🔭 星空を見る</button><div class="tir"><button id="how">🌐 使い方</button><button id="contact">📡 交信</button></div></div>
@@ -246,6 +246,7 @@ function openSkyDialog(id){const s=D.skies.find(x=>x.id===id);if(!s)return;const
 sheet(`<div class=big>${nm}</div><p class=m>${rng}</p><p class=w>この星空を観測しますか？</p><div class=r><button class=p data-a=goto data-id="${id}">はい</button><button data-a=close>いいえ</button></div>`)}
 function switchSky(id){D.cur=id;save();sh.classList.remove('open');rx=.3;ry=0;px=0;py=0;zoom=38;sel=null;linkFrom=null;actFilter=null;build();toast('この星空を観測しています')}
 sh.onclick=e=>{const d=e.target.dataset;if(d.i){lv=+d.i;sh.querySelectorAll('.dots i').forEach(i=>i.classList.toggle('on',+i.dataset.i<=lv));return}
+if(d.gal){const g=+d.gal;if(g!==(D.galaxy||1)){D.galaxy=g;const t=D.skies.find(s=>(s.g||1)===g);if(t){D.cur=t.id;save();rx=.3;ry=0;px=0;py=0;zoom=38;sel=null;linkFrom=null;actFilter=null;closeSh();build();toast('銀河'+g+'へ移動しました')}}else closeSh();return}
 if(d.act){if(d.act==='all')actFilter=null;else{if(!actFilter)actFilter=new Set();if(actFilter.has(d.act))actFilter.delete(d.act);else actFilter.add(d.act);if(!actFilter.size)actFilter=null}build();chips();openActFilter();return}
 if(!e.target.closest('button'))return;if(d.s)return select(d.s);if(d.p)return startAct(d.p,false);const a=d.a;
 if(a==='fadd')startAct($('#fi').value,true);else if(a==='next')nextAx(1);else if(a==='skip')nextAx(0);else if(a==='more')pick();else if(a==='close')closeSh();else if(a==='link'){linkFrom=sel;sel=null;sh.classList.remove('open');build();lkb(1)}
@@ -270,11 +271,17 @@ else if(a==='wipe'){if(confirm('この星空の記録をすべて削除します
 $('#add').onclick=pick;
 $('#bk').onclick=()=>{vrx=0;vry=0;linkFrom=null;lkb(0);startReset();touch();toast('元の位置に戻しています',1800)};
 $('#bp').onclick=()=>saveImage(()=>toast('画像を保存しました',3000));
+$('#bs').onclick=()=>saveImage(()=>{toast('画像を保存しました。Xの下書きに画像を添付してください',6000);setTimeout(shareX,500)});
+$('#bq').onclick=()=>sheet(`<p class=w>ほかの星空</p>${skyListHTML()}`);
+function galaxyListHTML(){const gs=[...new Set(D.skies.map(s=>s.g||1))].sort((a,b)=>a-b);
+return gs.map(g=>{const n=D.skies.filter(s=>(s.g||1)===g).length,on=g===(D.galaxy||1);
+return `<button class=c data-gal="${g}" style="${on?'background:#7f93ff;color:#060c28;border-color:#7f93ff':''}">銀河${g}（${n}）</button>`}).join('')}
+function openGalaxies(){sheet(`<p class=w>銀河</p><p class=m>移動する銀河を選んでください。</p><div class=r>${galaxyListHTML()}</div>`)}
+$('#bg').onclick=openGalaxies;
 function openActFilter(){const acts=SK().acts,on=a=>actFilter&&actFilter.has(a.id);
 const chip=a=>`<button class=c data-act="${a.id}" style="${on(a)?'background:#7f93ff;color:#060c28;border-color:#7f93ff':''}">${esc(a.label)}</button>`;
 sheet(`<p class=w>活動で絞る</p><p class=m>選んだ活動の星だけ、空に残します。</p><div class=r><button data-act=all style="${!actFilter?'background:#7f93ff;color:#060c28;border-color:#7f93ff':''}">全部</button>${acts.map(chip).join('')}</div>`)}
-function openMore(){sheet(`<p class=w>その他</p><div class=r><button data-a=openlist>🌌 一覧</button><button data-a=opensettings>⚙ 設定</button></div>`)}
-$('#bo').onclick=openMore;
+$('#bo').onclick=openSettings;
 $('#bc').onclick=()=>{const L=SK().cons.map(c=>({n:c.name,ids:c.ids.filter(i=>SK().stars.some(s=>s.id===i))})).filter(c=>c.ids.length);
 sheet(`<p class=w>星座</p>${L.length?L.map(c=>`<button class=c data-s="${c.ids[0]}">${esc(c.n)}（合計${c.ids.length}）</button>`).join(' '):'<p class=m>星をタップ →「線で結ぶ」で星を結ぶと、その星座に名前をつけられます。</p>'}`)};
 function openSettings(){sheet(`<p class=w>設定</p><p class=m>データはこの端末にだけ保存されています。銀河${D.galaxy||1}・星空は1つの銀河につき${MAX_SKIES}個までです。</p><div class=r><button class="sw${orbOn?' on':''}" data-a=orbtoggle><i></i>🪐 惑星軌道図</button></div><div class=r><button data-a=shareimg>📷 画像を保存</button><button data-a=sharex>🕊 Xでシェア</button></div><div class=r><button data-a=exp>書き出し（JSON）</button><button data-a=wipe>この星空を削除</button></div><div class=r style="margin-top:1em"><button data-a=title>📔 TITLE</button></div>`)}
@@ -293,7 +300,7 @@ else if(a==='sharex')saveImage(()=>{toast('画像を保存しました。Xの下
 else if(!a)$('#fin').classList.remove('on')};
 function newSkyFlow(){const s=blankSky(D.galaxy||1);D.skies.push(s);D.cur=s.id;save();rx=.3;ry=0;px=0;py=0;zoom=38;sel=null;linkFrom=null;actFilter=null;build();pick()}
 function newGalaxy(){D.galaxy=(D.galaxy||1)+1;const s=blankSky(D.galaxy);D.skies.push(s);D.cur=s.id;save();rx=.3;ry=0;px=0;py=0;zoom=38;sel=null;linkFrom=null;actFilter=null;build();toast('新しい銀河へ移動しました',4000);pick()}
-$('#tg').innerHTML='<button data-x=filter aria-label="活動で絞る">🗂</button><button data-x=all>全部</button>'+AX.map((x,i)=>`<button data-x=${i}>${x.e} ${x.n}</button>`).join('');
+$('#tg').innerHTML='<button data-x=filter aria-label="活動で絞る">🗂</button>'+AX.map((x,i)=>`<button data-x=${i}>${x.e} ${x.n}</button>`).join('');
 function chips(){[...$('#tg').children].forEach(b=>{if(b.dataset.x==='filter'){b.classList.toggle('on-f',!!actFilter);return}const a=b.dataset.x==='all',on=a?vis.every(Boolean):vis[+b.dataset.x];b.classList.toggle('off',!on);if(!a){b.classList.toggle('on-c',on&&!vis.every(Boolean));b.style.setProperty('--ax',hex(AX[+b.dataset.x].c));b.style.borderColor=on?hex(AX[+b.dataset.x].c):''}})}
 $('#tg').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=b.dataset.x;if(x==='filter')return openActFilter();if(x==='all')vis.fill(1);else{const i=+x;if(vis.every(Boolean))vis.fill(0),vis[i]=1;else vis[i]^=1;if(!vis.some(Boolean))vis.fill(1)}chips();build()};chips();
 sh.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=sh.querySelector('.p');b&&b.click()}});
@@ -305,7 +312,9 @@ $('#how').onclick=()=>{sheet(`<p class=w>使い方</p>
 <p class=m>銀河</p><p>ひとつの銀河には、星空を12個まで集められます。いっぱいになると、観測完了の画面に「🌌 新たな銀河へ」ボタンが出て、新しい銀河で観測を続けられます。これまでの銀河の星空は消えず、書き出したデータの中に残ります。</p>
 <p class=m>向きを戻す</p><p>画面左下の🧭を押すと、星空の向きとズームを、最初に見える位置へ戻せます。</p>
 <p class=m>活動で絞る</p><p>画面下のフィルター列、いちばん左の🗂から、「食事」「SNS」のように活動を選ぶと、その活動から生まれた星だけを残して眺められます。</p>
-<p class=m>撮影</p><p>画面左下の📷️で、今の星空をいつでも画像として保存できます。</p>
+<p class=m>画面左下のボタン</p><p>🧭向きを戻す・📷️画像を保存・🕊️Xでシェア・📋️ほかの星空、が並んでいます。</p>
+<p class=m>銀河を移動する</p><p>画面上の🚀から、これまでに訪れた銀河を選んで移動できます。</p>
+<p class=m>設定</p><p>画面右上の⚙️から、惑星軌道図の表示や、データの書き出しができます。</p>
 <p class=m>データの保存について</p><p>星空のデータは、この端末とブラウザの中だけに保存されます。外部のサーバーに送られたり、収集されたりすることはありません。</p>
 <p class=m>ご相談・不具合</p><p>不具合や開発のご相談は、下のボタンからお願いします。</p><div class=r><button data-a=contact>📡 交信</button></div>`)};
 $('#contact').onclick=()=>window.open(TW,'_blank');
