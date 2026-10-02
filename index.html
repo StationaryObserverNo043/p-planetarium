@@ -224,7 +224,7 @@ const s=SK(),nm=s.named?s.name:'名もない星空',rng=s.start?`${fmt(s.start)}
 ctx.textAlign='center';ctx.fillStyle='rgba(232,236,255,.92)';ctx.font=`${Math.round(h*.026)}px serif`;ctx.fillText(nm,w/2,h*.945);
 ctx.fillStyle='rgba(139,150,200,.85)';ctx.font=`${Math.round(h*.016)}px serif`;ctx.fillText(rng,w/2,h*.965);
 out.toBlob(b=>{if(!b)return;const url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download=(s.named?s.name:'my-planetarium')+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),4000);cb&&cb()},'image/png')}
-function shareX(){window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(SITE+'\n\n'+TAG),'_blank')}
+function shareX(){window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('私の想いが星を結びました。\n\nあなたも「思考の宇宙」を\n探索してみませんか？\n\n⏩️'+SITE+'\n\n'+TAG),'_blank')}
 function skyLabel(){const s=SK(),nm=s.named?esc(s.name):'<span style="color:var(--dim)">名もない星空</span>',rng=s.start?`${fmt(s.start)}〜${fmt(s.end||s.start)}`:'観測前';
 $('#sn').innerHTML=`<button data-a=rename>${nm}<br><small>${rng}</small></button>`}
 $('#sn').onclick=()=>renameSky();
