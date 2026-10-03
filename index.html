@@ -58,12 +58,16 @@ input:focus{border-color:#7f93ff}
 #tt{position:fixed;left:50%;bottom:calc(var(--sa) + 90px);transform:translateX(-50%);z-index:40;background:rgba(20,30,80,.95);border:1px solid var(--line);border-radius:999px;padding:.5em 1.2em;font-size:14px;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
 #tt.on{opacity:1;pointer-events:auto}
 #tw{position:fixed;inset:0;pointer-events:none}#tw i{position:absolute;border-radius:50%;background:#cfd8ff;opacity:.08;animation:tw ease-in-out infinite}
-#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:50}#flash.on{opacity:.85;transition:opacity .35s ease-out}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:50}#flash.on{opacity:.92;transition:opacity .12s ease-out}
+#shutter{position:fixed;inset:0;pointer-events:none;z-index:49;overflow:hidden}
+#shutter i{position:absolute;left:0;right:0;height:52%;background:#000;transition:transform .32s cubic-bezier(.4,0,.2,1)}
+#shutter i.t{top:0;transform:translateY(-100%)}#shutter i.b{bottom:0;transform:translateY(100%)}
+#shutter.closed i.t,#shutter.closed i.b{transform:translateY(0)}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:2}
 @keyframes tw{0%,100%{opacity:.06}50%{opacity:.5}}
 @media(prefers-reduced-motion:reduce){#sh,#ti,#fin,#tw i{transition:none;animation:none}}
 </style></head><body>
-<div id="tw"></div><canvas id="cv"></canvas><canvas id="fx"></canvas><div id="flash"></div><div id="lk">結ぶ星をタップ<button id="lc">やめる</button></div>
+<div id="tw"></div><canvas id="cv"></canvas><canvas id="fx"></canvas><div id="shutter"><i class="t"></i><i class="b"></i></div><div id="flash"></div><div id="lk">結ぶ星をタップ<button id="lc">やめる</button></div>
 <div id="sn"></div>
 <div id="top"><button id="bc">💫</button><button id="bg">🚀</button><button id="bf" aria-label="観測を終える">◎</button><button id="bo" aria-label="設定">⚙️</button></div>
 <div id="bar"><div id="bkrow"><div id="bktools"><button id="bk">🧭</button><button id="bp">📷️</button><button id="bs">🕊️</button></div><button id="add">＋ 星を追加</button></div><div id="tg"></div></div>
@@ -211,7 +215,11 @@ function lkb(o){$('#lk').classList.toggle('on',o)}$('#lc').onclick=()=>{linkFrom
 function closeSh(){lkb(0);sh.classList.remove('open');if(sel||linkFrom){sel=null;linkFrom=null;build()}}
 let tm;function toast(t,ms=2400,act){const e=$('#tt');e.innerHTML=t+(act?` <button data-u=1 style="margin-left:.6em;padding:.2em .8em">元に戻す</button>`:'');e.classList.add('on');clearTimeout(tm);tm=setTimeout(()=>e.classList.remove('on'),ms)}
 $('#tt').onclick=e=>{if(e.target.dataset.u&&undo){D=JSON.parse(undo);undo=null;save();build();$('#tt').classList.remove('on')}};
-function flash(){const f=$('#flash');f.classList.remove('on');void f.offsetWidth;f.classList.add('on');setTimeout(()=>f.classList.remove('on'),40)}
+function flash(){const f=$('#flash'),sh=$('#shutter');
+sh.classList.add('closed');
+setTimeout(()=>{f.classList.remove('on');void f.offsetWidth;f.classList.add('on')},320);
+setTimeout(()=>f.classList.remove('on'),320+160);
+setTimeout(()=>sh.classList.remove('closed'),320+220)}
 function saveImage(cb){flash();G.rotation.set(rx,ry,0);cam.position.set(px,py,zoom);R.render(S,cam);
 const w=cv.width,h=cv.height,out=document.createElement('canvas');out.width=w;out.height=h;const ctx=out.getContext('2d');
 const g=ctx.createRadialGradient(w/2,h*.4,0,w/2,h*.4,Math.max(w,h)*.8);g.addColorStop(0,'#101a52');g.addColorStop(1,'#060c28');
