@@ -66,11 +66,13 @@ input:focus{border-color:#7f93ff}
 #shutter i{position:absolute;left:0;right:0;height:52%;background:#000;transition:transform .32s cubic-bezier(.4,0,.2,1)}
 #shutter i.t{top:0;transform:translateY(-100%)}#shutter i.b{bottom:0;transform:translateY(100%)}
 #shutter.closed i.t,#shutter.closed i.b{transform:translateY(0)}
+#swipe{position:fixed;inset:0;background:#000;pointer-events:none;z-index:49;display:none}
+#swipe.on{display:block}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:2}
 @keyframes tw{0%,100%{opacity:.06}50%{opacity:.5}}
 @media(prefers-reduced-motion:reduce){#sh,#ti,#fin,#tw i{transition:none;animation:none}}
 </style></head><body>
-<div id="tw"></div><canvas id="cv"></canvas><canvas id="fx"></canvas><div id="shutter"><i class="t"></i><i class="b"></i></div><div id="flash"></div><div id="lk">結ぶ星をタップ<button id="lc">やめる</button></div>
+<div id="tw"></div><canvas id="cv"></canvas><canvas id="fx"></canvas><div id="shutter"><i class="t"></i><i class="b"></i></div><div id="swipe"></div><div id="flash"></div><div id="lk">結ぶ星をタップ<button id="lc">やめる</button></div>
 <div id="sn"></div>
 <div id="top"><button id="bc">💫</button><button id="bg">🚀</button><button id="bf" aria-label="観測を終える">◎</button><button id="bo" aria-label="設定">⚙️</button></div>
 <div id="bar"><div id="bkrow"><div id="bktools"><button id="bk">🧭</button><button id="bp">📷️</button><button id="bs">🕊️</button></div><button id="add">＋ 星を追加</button></div><div id="tg"></div></div>
@@ -218,6 +220,15 @@ function lkb(o){$('#lk').classList.toggle('on',o)}$('#lc').onclick=()=>{linkFrom
 function closeSh(){lkb(0);sh.classList.remove('open');if(sel||linkFrom){sel=null;linkFrom=null;build()}}
 let tm;function toast(t,ms=2400,act){const e=$('#tt');e.innerHTML=t+(act?` <button data-u=1 style="margin-left:.6em;padding:.2em .8em">元に戻す</button>`:'');e.classList.add('on');clearTimeout(tm);tm=setTimeout(()=>e.classList.remove('on'),ms)}
 $('#tt').onclick=e=>{if(e.target.dataset.u&&undo){D=JSON.parse(undo);undo=null;save();build();$('#tt').classList.remove('on')}};
+function galaxyWipe(onMid){const el=$('#swipe'),CLOSE=380,HOLD=90,OPEN=420;el.classList.add('on');el._mid=false;const t0=performance.now();
+function frame(now){const t=now-t0;let deg;
+if(t<CLOSE)deg=(t/CLOSE)*360;
+else if(t<CLOSE+HOLD){deg=360;if(!el._mid){el._mid=true;onMid&&onMid()}}
+else if(t<CLOSE+HOLD+OPEN)deg=360-((t-CLOSE-HOLD)/OPEN)*360;
+else{el.classList.remove('on');el.style.webkitMaskImage='';el.style.maskImage='';return}
+const m=`conic-gradient(from 0deg,#000 ${deg}deg,transparent ${deg}deg)`;el.style.webkitMaskImage=m;el.style.maskImage=m;
+requestAnimationFrame(frame)}
+requestAnimationFrame(frame)}
 function flash(){const f=$('#flash'),sh=$('#shutter');
 sh.classList.add('closed');
 setTimeout(()=>{f.classList.remove('on');void f.offsetWidth;f.classList.add('on')},320);
@@ -256,7 +267,8 @@ sh.onclick=e=>{const d=e.target.dataset;if(d.i){lv=+d.i;sh.querySelectorAll('.do
 if(d.gal){openGalaxySkies(+d.gal);return}
 if(d.a==='backgal'){openGalaxies();return}
 if(d.skygal){const t=D.skies.find(x=>x.id===d.skygal);if(t){if(t.id!==D.cur){const mine=D.skies.filter(x=>(x.g||1)===(t.g||1)),idx=mine.findIndex(x=>x.id===t.id),lbl=skyLabelOf(t,idx);
-D.galaxy=t.g||1;D.cur=t.id;save();rx=.3;ry=0;px=0;py=0;zoom=38;sel=null;linkFrom=null;actFilter=null;flash();build();closeSh();toast(`${lbl}へ移動しました`,2800)}
+closeSh();
+galaxyWipe(()=>{D.galaxy=t.g||1;D.cur=t.id;save();rx=.3;ry=0;px=0;py=0;zoom=38;sel=null;linkFrom=null;actFilter=null;build();toast(`${lbl}へ移動しました`,2800)})}
 else{closeSh();toast('すでにこの星空です',1800)}}return}
 if(d.act){if(d.act==='all')actFilter=null;else{if(!actFilter)actFilter=new Set();if(actFilter.has(d.act))actFilter.delete(d.act);else actFilter.add(d.act);if(!actFilter.size)actFilter=null}build();chips();openActFilter();return}
 if(!e.target.closest('button'))return;if(d.s)return select(d.s);if(d.p)return startAct(d.p,false);const a=d.a;
@@ -291,8 +303,9 @@ function skyLabelOf(s,i){return s.named?esc(s.name):'名もない星空 '+(CIRC[
 function openGalaxySkies(g){const skies=D.skies.filter(s=>(s.g||1)===g);
 const list=skies.map((s,i)=>{const nm=skyLabelOf(s,i),rng=s.start?`${fmt(s.start)}〜${fmt(s.end||s.start)}`:'観測前',on=s.id===D.cur;
 return `<button class=c data-skygal="${s.id}" style="${on?'background:#7f93ff;color:#060c28;border-color:#7f93ff':''}">${s.named?nm:`<span style="${on?'':'color:var(--dim)'}">${nm}</span>`}<br><small style="color:${on?'#060c28':'var(--dim)'}">${rng}${on?'・今ここ':''}</small></button>`}).join('');
-sheet(`<p class=w>銀河${g}の星空</p><div class=r>${list||'<p class=m>まだ星空がありません。</p>'}</div><div class=r style="margin-top:1em"><button data-a=backgal>← 銀河一覧へ</button></div>`)}
-$('#bg').onclick=openGalaxies;
+const multi=new Set(D.skies.map(s=>s.g||1)).size>1;
+sheet(`<p class=w>銀河${g}の星空</p><div class=r>${list||'<p class=m>まだ星空がありません。</p>'}</div>${multi?'<div class=r style="margin-top:1em"><button data-a=backgal>← 銀河一覧へ</button></div>':''}`)}
+$('#bg').onclick=()=>{const gs=[...new Set(D.skies.map(s=>s.g||1))];gs.length<=1?openGalaxySkies(gs[0]||1):openGalaxies()};
 function openActFilter(){const acts=SK().acts,on=a=>actFilter&&actFilter.has(a.id);
 const chip=a=>`<button class=c data-act="${a.id}" style="${on(a)?'background:#7f93ff;color:#060c28;border-color:#7f93ff':''}">${esc(a.label)}</button>`;
 sheet(`<p class=w>活動で絞る</p><p class=m>選んだ活動の星だけ、空に残します。</p><div class=r><button data-act=all style="${!actFilter?'background:#7f93ff;color:#060c28;border-color:#7f93ff':''}">全部</button>${acts.map(chip).join('')}</div>`)}
